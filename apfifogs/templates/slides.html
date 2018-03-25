@@ -1,0 +1,85 @@
+{% load static %}
+
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <title>reveal.js</title>
+
+    <link rel="stylesheet" href="{% static 'css/reveal.css' %}">
+    <link rel="stylesheet" href="{% static 'css/theme/black.css' %}">
+    <style type="text/css">
+        p { text-align: left}
+    </style>
+
+</head>
+<body>
+{% if university_list %}
+    <div class="reveal">
+        <div class="slides">
+            {% for university in university_list %}
+                <section>
+                    <h3>{{ university.name }}</h3>
+                    <small>({{ university.town }})</small>
+                    <p>
+                        {{ university.name_of_fachschaft }} ( {{ university.type_of_organisation }} )<br>
+                        #Studierend der Uni: {{ university.amount_all_students }} <br>
+                        #Repräsentierte Studierende: {{ university.amount_represented_students }}<br>
+                        #Aktive Fachschaftler: {{ university.amount_activ_fachschaftler }}
+
+
+                    </p>
+                {% if university.program_list %}
+                    <table>
+                    <tr>
+                        <th><small>Studiengang</small></th>
+                        <th><small>Anfänger</small></th>
+                        <th><small>Anfänger Vorjahr</small></th>
+                    </tr>
+                        {% for program in university.program_list %}
+                        <tr>
+                            <td>{{ program.name }}</td>
+                            <td>{{ program.beginners }}</td>
+                            <td>{{ program.beginners_last_year }}</td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                {% endif %}
+                {% if university.next %}
+                <div style="position: fixed; bottom: 12px; right:12px">
+                    <small>{{ university.next }} >></small>
+                </div>
+                {% endif %}
+                </section>
+            {% endfor %}
+        </div>
+    </div>
+
+    <script src="{% static 'lib/js/head.min.js' %}"></script>
+    <script src="{% static 'js/reveal.js' %}"></script>
+
+    <script>
+        // More info about config & dependencies:
+        // - https://github.com/hakimel/reveal.js#configuration
+        // - https://github.com/hakimel/reveal.js#dependencies
+        Reveal.initialize({
+            center: false,
+            dependencies: [
+                {src: '{% static 'plugin/markdown/marked.js' %}'},
+                {src: '{% static 'plugin/markdown/markdown.js' %}'},
+                {src: '{% static 'plugin/notes/notes.js' %}', async: true},
+                {
+                    src: '{% static 'plugin/highlight/highlight.js' %}', async: true, callback: function () {
+                        hljs.initHighlightingOnLoad();
+                    }
+                }
+            ]
+        });
+    </script>
+{% else %}
+    <p>No University are available.</p>
+{% endif %}
+</body>
+</html
